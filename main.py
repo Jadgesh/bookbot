@@ -6,8 +6,8 @@ def main():
     word_count = count_words(book_text)
     char_dict = count_characters(book_text)
     # Debugging code remove me
-    print(f"{word_count} total words")
-    print(char_dict)
+    print(f'{word_count} total words')
+    print_report(file_path, word_count, char_dict)
     
 def read_book(path):
     book_text = None
@@ -26,16 +26,32 @@ def count_words(input):
 def count_characters(input):
     char_dict = {}
     
-    for char in input:
+    for char in input.lower():
         if not(char.isalpha()):
             continue
-        
-        lower_case = char.lower()
-        if lower_case in char_dict:
-            char_dict[lower_case] += 1
+        if char in char_dict:
+            char_dict[char] += 1
         else:
-            char_dict[lower_case] = 1
+            char_dict[char] = 1
     
     return char_dict
+
+def print_report(file, wc, char_dict):
+    print(f'--- Begin report of {file} ---')
+    print(f'{wc} words found in the document', end='\n\n')
+    
+    for char in convert_dict_to_sorted_list(char_dict):
+        print(f'The \'{char['char']}\' character was found {char['count']} times')
+    
+    print(f'--- End report ---')
+    
+def convert_dict_to_sorted_list(dict):
+    sorted_list = []
+    for key in dict:
+        sorted_list.append({"char": key, "count": dict[key]})
+        
+    sorted_list = sorted(sorted_list, key=lambda a:a["count"], reverse=True)
+    
+    return sorted_list
 if __name__ == '__main__':
     main()
